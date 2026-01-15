@@ -62,3 +62,12 @@ EXPOSE 80
 
 # Start application
 CMD ["/start.sh"]
+
+# Create startup script
+RUN echo '#!/bin/bash\n\
+echo "Running migrations..."\n\
+php artisan migrate --force\n\
+echo "Clearing config cache..."\n\
+php artisan config:cache\n\
+echo "Starting Apache on port 80..."\n\
+apache2-foreground' > /start.sh && chmod +x /start.sh
