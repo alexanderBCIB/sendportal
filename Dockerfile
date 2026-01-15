@@ -45,4 +45,10 @@ RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 EXPOSE 8080
 
 # Start application
-CMD php artisan migrate --force && echo "Starting server on port ${PORT:-8080}..." && php artisan serve --host=0.0.0.0 --port=${PORT:-8080} 2>&1
+CMD set -x && \
+    php artisan migrate --force && \
+    echo "Migration complete" && \
+    echo "PORT is: ${PORT}" && \
+    echo "Starting Laravel server..." && \
+    php artisan serve --host=0.0.0.0 --port=${PORT:-8080} --verbose || \
+    (echo "Server failed to start" && tail -f /dev/null)
